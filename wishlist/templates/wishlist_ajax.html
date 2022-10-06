@@ -51,8 +51,23 @@
         deskripsi,
       },
       function(data, status){
+
         console.log("add wishlist success");
-        updateIsiTable();
+        var tr = document.createElement("tr");
+        var tdNama = document.createElement("td");
+        tdNama.append(nama);
+        var tdHarga = document.createElement("td");
+        tdHarga.append(harga);
+        var tdDeskripsi = document.createElement("td");
+        tdDeskripsi.append(deskripsi);
+        
+        // add to the table row
+        tr.append(tdNama);
+        tr.append(tdHarga);
+        tr.append(tdDeskripsi);
+        
+        // add the table row to the main table
+        $(".table").append(tr);
         $("#input_nama").val("");
         $("#input_harga").val("");
         $("#input_deskripsi").val("");
