@@ -11,10 +11,34 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 @login_required(login_url='/wishlist/login/')
 def show_wishlist(request):
+    data_barang_wishlist = BarangWishlist.objects.all()
+    context = {
+        'list_barang': data_barang_wishlist,
+        'nama': 'James Smith',
+        'last_login': request.COOKIES['last_login'],
+    }
+    return render(request, "wishlist.html", context)
+
+# LAB 05
+@login_required(login_url='/wishlist/login/')
+@csrf_exempt
+def add_wishlist(request):
+    if request.method == "POST":
+        nama = request.POST.get("nama")
+        harga = request.POST.get("harga")
+        deskripsi = request.POST.get("deskripsi")
+        BarangWishlist.objects.create(nama_barang=nama, harga_barang=harga, deskripsi=deskripsi)
+        return HttpResponse()
+    else:
+        return redirect("wishlist:show_wishlist")
+
+@login_required(login_url='/wishlist/login/')
+def show_wishlist_ajax(request):
     data_barang_wishlist = BarangWishlist.objects.all()
     context = {
         'list_barang': data_barang_wishlist,
